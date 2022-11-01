@@ -12,6 +12,12 @@
       "Stock2Shop\\Tests\\Logger\\": "tests/"
     }
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/stock2shop/share"
+    }
+  ],
   "authors": [
     {
       "name": "Stock2Shop PTY (Ltd)",
@@ -19,10 +25,16 @@
     }
   ],
   "require": {
-    "php": ">=7.4",
+    "php": ">=8.1",
+    "monolog/monolog": "^2.8.0",
+    "stock2shop/share": "^0.1",
+    "aws/aws-sdk-php": "^3.238",
+    "maxbanton/cwh": "^2.0.2",
+    "vlucas/phpdotenv": "^5.4",
     "ext-json": "*"
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.12"
+    "friendsofphp/php-cs-fixer": "^3.12",
+    "phpunit/phpunit": "^9"
   }
 }
