@@ -1,0 +1,28 @@
+{
+  "name": "stock2shop/logger",
+  "description": "Stock2Shop Logging",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "Stock2Shop\\Logger\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Stock2Shop\\Tests\\Logger\\": "tests/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Stock2Shop PTY (Ltd)",
+      "email": "support@stock2shop.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.12"
+  }
+}
