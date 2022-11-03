@@ -4,55 +4,40 @@ declare(strict_types=1);
 
 namespace Stock2Shop\Tests\Logger;
 
+use Stock2Shop\Logger\Handler\HandlerFile;
 use Stock2Shop\Logger\LogChannelProductsSuccess;
-use Stock2Shop\Logger\Services\LogService;
-use Stock2Shop\Logger\Config;
 use Stock2Shop\Share\DTO;
 
 class LogChannelProductsSuccessTest extends Base
 {
     public function testSave()
     {
-        // test writing logs to file
-        $loader = new COnfig\LoaderArray([
-            'LOG_CHANNEL'      => 'Share',
-            'LOG_FS_DIR'       => sprintf('%s/output/', __DIR__),
-            'LOG_FS_FILE_NAME' => 'system.log'
-        ]);
-        Config\Env::set($loader);
-        LogService::init();
-
         // clean test file
-        $this->resetLogs();
+        $this->resetLogs(__DIR__ . '/output/system.log');
 
-        $p = DTO\ChannelProduct::createArray([
-            [
-                'client_id' => 1,
-                'channel_id' => 2,
-            ],
-            [
-                'client_id' => 1,
-                'channel_id' => 2,
-            ]
-        ]);
-        $log = new LogChannelProductsSuccess($p);
-        $log->save();
+        $client_id = 21;
+        $channel_id = 57;
+        $count = 2;
 
-        $parts = $this->getLogs();
+        $handler = new HandlerFile(__DIR__ . '/output/system.log');
+        $log = new LogChannelProductsSuccess($handler);
+        $log->write($channel_id, $client_id, $count);
+
+
+        $parts = $this->getLogs(__DIR__ . '/output/system.log');
 
         // 4 lines, one is space at end
         $this->assertCount(2, $parts);
         $this->assertEquals('', $parts[1]);
         for ($i=0; $i<1; $i++) {
             $obj = json_decode($parts[0], true);
-            $this->assertEquals(DTO\Log::LOG_LEVEL_INFO, $obj['level']);
+            $this->assertEquals(DTO\Log::LOG_LEVEL_ERROR, $obj['level']);
             $this->assertEquals(LogChannelProductsSuccess::MESSAGE, $obj['message']);
             $this->assertEquals(2, $obj['metric']);
-            $this->assertEquals(1, $obj['client_id']);
-            $this->assertEquals(2, $obj['channel_id']);
+            $this->assertEquals(21, $obj['client_id']);
+            $this->assertEquals(57, $obj['channel_id']);
             $this->assertEquals(LogChannelProductsSuccess::TAG, $obj['tags'][0]);
-            $this->assertArrayNotHasKey('trace', $obj);
-            $this->assertArrayHasKey('datetime', $obj);
+            $this->assertEmpty($obj['trace']);
         }
     }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Stock2Shop\Logger\Config;
+namespace Stock2Shop\Logger\Handler\Config;
 
 use Dotenv\Dotenv;
 

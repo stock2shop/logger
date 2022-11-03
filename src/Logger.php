@@ -2,62 +2,53 @@
 
 namespace Stock2Shop\Logger;
 
-use Exception;
-use InvalidArgumentException;
-use Monolog\Logger as MonologLogger;
-use Stock2Shop\Share\DTO;
-use Stock2Shop\Logger\Config\Env;
-use Stock2Shop\Logger\Config\EnvKey;
+use Psr\Log\AbstractLogger;
+use Stock2Shop\Logger\Handler\HandlerInterface;
+use Stock2Shop\Share\DTO\Log;
 
-class Logger extends MonologLogger
+class Logger extends AbstractLogger
 {
-    public const LOG_ORIGIN = 'Core';
-    public const LOG_LEVEL_MAP = [
-        DTO\Log::LOG_LEVEL_ERROR    => MonologLogger::ERROR,
-        DTO\Log::LOG_LEVEL_DEBUG    => MonologLogger::DEBUG,
-        DTO\Log::LOG_LEVEL_INFO     => MonologLogger::INFO,
-        DTO\Log::LOG_LEVEL_CRITICAL => MonologLogger::CRITICAL,
-        DTO\Log::LOG_LEVEL_WARNING  => MonologLogger::WARNING,
+    public const LOG_LEVEL_ERROR = 'error';
+    public const LOG_LEVEL_DEBUG = 'debug';
+    public const LOG_LEVEL_INFO = 'info';
+    public const LOG_LEVEL_CRITICAL = 'critical';
+    public const LOG_LEVEL_WARNING = 'warning';
+    public const ALLOWED_LOG_LEVEL = [
+        self::LOG_LEVEL_ERROR,
+        self::LOG_LEVEL_DEBUG,
+        self::LOG_LEVEL_INFO,
+        self::LOG_LEVEL_CRITICAL,
+        self::LOG_LEVEL_WARNING
     ];
 
-    /**
-     * @throws Exception
-     */
-    public function __construct()
-    {
-        if (
-            Env::get(EnvKey::LOG_CW_KEY) &&
-            Env::get(EnvKey::LOG_CW_SECRET)
-        ) {
-            $handler = HandlerCloudWatch::get();
-        } else {
-            if (
-                Env::get(EnvKey::LOG_FS_DIR) &&
-                Env::get(EnvKey::LOG_FS_FILE_NAME)
-            ) {
-                $handler = HandlerFile::get();
-            }
-        }
-        if (!isset($handler)) {
-            throw new InvalidArgumentException('Logging not configured');
-        }
-        $handler->setFormatter(new FormatterJson());
+    public HandlerInterface $handler;
 
-        // Create monolog instance with config
-        parent::__construct(
-            Env::get(EnvKey::LOG_CHANNEL),
-            [$handler]
-        );
+    public function __construct(HandlerInterface $handler)
+    {
+        $this->handler = $handler;
     }
 
-    public function write(DTO\Log $log)
+    public function log($level, \Stringable|string $message, array $context = []): void
     {
-        $level       = self::LOG_LEVEL_MAP[$log->level];
-        $log->origin = self::LOG_ORIGIN;
-        $this->addRecord(
-            $level,
-            $log->message,
-            (array)$log
-        );
+        $log = new Log([
+            'channel_id'   => $context['channel_id'],
+            'client_id'    => $context['client_id'],
+            'context'      => $context['context'],
+            'created'      => $context['created'],
+            'ip'           => $context['ip'],
+            'log_to_es'    => $context['log_to_es'],
+            'level'        => $context['level'],
+            'message'      => $message,
+            'method'       => $context['method'],
+            'metric'       => $context['metric'],
+            'origin'       => $context['origin'],
+            'remote_addr'  => $context['remote_addr'],
+            'request_path' => $context['request_path'],
+            'source_id'    => $context['source_id'],
+            'tags'         => $context['tags'],
+            'trace'        => $context['trace'],
+            'user_id'      => $context['user_id'],
+        ]);
+        $this->handler->write($level, $log);
     }
 }
