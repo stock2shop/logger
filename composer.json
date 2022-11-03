@@ -16,6 +16,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/stock2shop/share"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/stock2shop/environment"
     }
   ],
   "authors": [
@@ -27,7 +31,8 @@
   "require": {
     "php": ">=8.1",
     "monolog/monolog": "^2.8.0",
-    "stock2shop/share": "^0.1",
+    "stock2shop/share": "^0.2",
+    "stock2shop/environment": "^0.1",
     "aws/aws-sdk-php": "^3.238",
     "maxbanton/cwh": "^2.0.2",
     "vlucas/phpdotenv": "^5.4",

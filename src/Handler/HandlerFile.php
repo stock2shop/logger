@@ -4,37 +4,24 @@ namespace Stock2Shop\Logger\Handler;
 
 use Monolog\Handler;
 use Monolog\Handler\StreamHandler;
-use Stock2Shop\Logger\Handler\Config\Env;
-use Stock2Shop\Logger\Handler\Config\EnvKey;
-use Stock2Shop\Logger\Logger;
-use Stock2Shop\Share\DTO\Log;
+use Stock2Shop\Environment\Env;
 
-class HandlerFile implements HandlerInterface
+final class HandlerFile implements HandlerInterface
 {
-    private string $filename;
+    private const LOG_FS_DIR = 'LOG_FS_DIR';
+    private const LOG_FS_FILE_NAME = 'LOG_FS_FILE_NAME';
 
-    public function __construct(string $filename)
+    /**
+     * @return StreamHandler
+     */
+    public static function get(): Handler\HandlerInterface
     {
-        if ($filename == '') {
-            throw new \UnexpectedValueException('Log file name must be set');
+        $dir  = Env::get(self::LOG_FS_DIR);
+        $file = Env::get(self::LOG_FS_FILE_NAME);
+        if (!is_dir($dir)) {
+            mkdir($dir);
         }
-
-        $dir = dirname($filename);
-        if (!file_exists($dir)) {
-            $status = mkdir($dir, 0777, true);
-            if ($status === false && !is_dir($dir)) {
-                throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s"', $dir));
-            }
-        }
-        $this->filename = $filename;
-    }
-
-    public function write(string $level, Log $log)
-    {
-        if (!in_array($level, Logger::ALLOWED_LOG_LEVEL)) {
-            throw new \InvalidArgumentException(sprintf('Invalid log level %s', $level));
-        }
-
-        file_put_contents($this->filename, json_encode($log) . PHP_EOL, FILE_APPEND);
+        $path = sprintf('%s/%s', $dir, $file);
+        return new StreamHandler($path);
     }
 }

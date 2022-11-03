@@ -2,32 +2,30 @@
 
 namespace Stock2Shop\Logger;
 
-
-use Stock2Shop\Logger\Handler\HandlerInterface;
-use Stock2Shop\Share\DTO;
+use Stock2Shop\Environment\Env;
 use Throwable;
 
-final class LogException extends Logger
+final class LogException implements LogInterface
 {
-    private string $origin;
+    public Log $log;
 
-    public function __construct(HandlerInterface $handler, string $origin)
+    private const LOG_CHANNEL = 'LOG_CHANNEL';
+
+    public function __construct(Throwable $e)
     {
-        parent::__construct($handler);
-        $this->origin = $origin;
+        $this->log = new Log([
+            'level'     => Log::LOG_LEVEL_ERROR,
+            'log_to_es' => true,
+            'message'   => $e->getMessage(),
+            'origin'    => Env::get(self::LOG_CHANNEL),
+            'client_id' => 0,
+            'trace'     => $e->getTrace()
+        ]);
     }
 
-    public function write(Throwable $e, int $channel_id, int $client_id): void
+    public function save(): void
     {
-        $log = new DTO\Log([
-            'level'      => DTO\Log::LOG_LEVEL_ERROR,
-            'message'    => $e->getMessage(),
-            'trace'      => $e->getTrace(),
-            'client_id'  => $client_id,
-            'channel_id' => $channel_id,
-            'log_to_es'  => true,
-            'origin'     => $this->origin,
-        ]);
-        $this->handler->write(DTO\Log::LOG_LEVEL_ERROR, $log);
+        $logger = new Logger();
+        $logger->write($this->log);
     }
 }

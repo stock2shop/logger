@@ -2,33 +2,38 @@
 
 namespace Stock2Shop\Logger;
 
-use Stock2Shop\Logger\Handler\HandlerInterface;
+use Stock2Shop\Environment\Env;
 use Stock2Shop\Share\DTO;
 
-final class LogChannelProductsSuccess extends Logger
+final class LogChannelProductsSuccess implements LogInterface
 {
     public const TAG = 'sync_channel_products';
     public const MESSAGE = 'Channel Sync Products';
 
-    public function __construct(HandlerInterface $handler)
-    {
-        parent::__construct($handler);
-    }
+    public Log $log;
 
-    public function write(int $channel_id, int $client_id, int $count): void
+    private const LOG_CHANNEL = 'LOG_CHANNEL';
+
+    /**
+     * @param DTO\ChannelProduct[] $channelProducts
+     */
+    public function __construct(array $channelProducts)
     {
-        $log = new DTO\Log([
-            'level'      => DTO\Log::LOG_LEVEL_ERROR,
-            'channel_id' => $channel_id,
-            'client_id'  => $client_id,
+        $this->log = new Log([
+            'log_to_es'  => true,
+            'origin'     => Env::get(self::LOG_CHANNEL),
+            'level'      => Log::LOG_LEVEL_INFO,
+            'channel_id' => $channelProducts[0]->channel_id,
+            'client_id'  => $channelProducts[0]->client_id,
             'message'    => self::MESSAGE,
             'tags'       => [self::TAG],
-            'metric'     => $count,
-            'log_to_es'  => true,
-            // todo - below fields should be set dynamically and not hard coded
-            'origin'     => 'origin',
-            'created'    => "2022-02-02"
+            'metric'     => count($channelProducts),
         ]);
-        $this->handler->write(DTO\Log::LOG_LEVEL_ERROR, $log);
+    }
+
+    public function save(): void
+    {
+        $logger = new Logger();
+        $logger->write($this->log);
     }
 }

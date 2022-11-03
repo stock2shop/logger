@@ -2,53 +2,58 @@
 
 namespace Stock2Shop\Logger;
 
-use Psr\Log\AbstractLogger;
-use Stock2Shop\Logger\Handler\HandlerInterface;
-use Stock2Shop\Share\DTO\Log;
+use Exception;
+use InvalidArgumentException;
+use Monolog\Logger as MonologLogger;
+use Stock2Shop\Environment\Env;
+use Stock2Shop\Logger\Handler\HandlerCloudWatch;
+use Stock2Shop\Logger\Handler\HandlerFile;
 
-class Logger extends AbstractLogger
+class Logger extends MonologLogger
 {
-    public const LOG_LEVEL_ERROR = 'error';
-    public const LOG_LEVEL_DEBUG = 'debug';
-    public const LOG_LEVEL_INFO = 'info';
-    public const LOG_LEVEL_CRITICAL = 'critical';
-    public const LOG_LEVEL_WARNING = 'warning';
-    public const ALLOWED_LOG_LEVEL = [
-        self::LOG_LEVEL_ERROR,
-        self::LOG_LEVEL_DEBUG,
-        self::LOG_LEVEL_INFO,
-        self::LOG_LEVEL_CRITICAL,
-        self::LOG_LEVEL_WARNING
+    public const LOG_LEVEL_MAP = [
+        Log::LOG_LEVEL_ERROR    => MonologLogger::ERROR,
+        Log::LOG_LEVEL_DEBUG    => MonologLogger::DEBUG,
+        Log::LOG_LEVEL_INFO     => MonologLogger::INFO,
+        Log::LOG_LEVEL_CRITICAL => MonologLogger::CRITICAL,
+        Log::LOG_LEVEL_WARNING  => MonologLogger::WARNING,
     ];
 
-    public HandlerInterface $handler;
+    private const LOG_CW_ENABLED = 'LOG_CW_ENABLED';
+    private const LOG_FS_ENABLED = 'LOG_FS_ENABLED';
+    private const LOG_CHANNEL = 'LOG_CHANNEL';
 
-    public function __construct(HandlerInterface $handler)
+    /**
+     * @throws Exception
+     */
+    public function __construct()
     {
-        $this->handler = $handler;
+        if (Env::get(self::LOG_CW_ENABLED)) {
+            $handler = HandlerCloudWatch::get();
+        } elseif (Env::get(self::LOG_FS_ENABLED)) {
+            $handler = HandlerFile::get();
+        }
+        if (!isset($handler)) {
+            throw new InvalidArgumentException('Logging not configured');
+        }
+        $handler->setFormatter(new FormatterJson());
+
+        // Create monolog instance with config
+        parent::__construct(
+            Env::get(self::LOG_CHANNEL),
+            [$handler]
+        );
     }
 
-    public function log($level, \Stringable|string $message, array $context = []): void
+
+    public function write(Log $log)
     {
-        $log = new Log([
-            'channel_id'   => $context['channel_id'],
-            'client_id'    => $context['client_id'],
-            'context'      => $context['context'],
-            'created'      => $context['created'],
-            'ip'           => $context['ip'],
-            'log_to_es'    => $context['log_to_es'],
-            'level'        => $context['level'],
-            'message'      => $message,
-            'method'       => $context['method'],
-            'metric'       => $context['metric'],
-            'origin'       => $context['origin'],
-            'remote_addr'  => $context['remote_addr'],
-            'request_path' => $context['request_path'],
-            'source_id'    => $context['source_id'],
-            'tags'         => $context['tags'],
-            'trace'        => $context['trace'],
-            'user_id'      => $context['user_id'],
-        ]);
-        $this->handler->write($level, $log);
+        $level       = self::LOG_LEVEL_MAP[$log->level];
+        $log->origin = self::getName();
+        $this->addRecord(
+            $level,
+            $log->message,
+            (array)$log
+        );
     }
 }
