@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Stock2Shop\Logger;
 
-class Log implements LogInterface
+class Custom implements LogInterface
 {
     /**
      * @param  Domain\log $params

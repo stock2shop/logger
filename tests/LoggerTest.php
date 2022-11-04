@@ -69,13 +69,12 @@ class LoggerTest extends Base
         $handlers = $logger->getHandlers();
         $this->assertCount(2, $handlers);
         $this->assertEquals(Env::get(EnvKey::LOG_CHANNEL), $logger->getName());
+        $this->assertInstanceOf(\Monolog\Logger::class, $logger);
 
         // check that CWL handler has been set correctly
         $this->assertInstanceOf(CloudWatch::class, $handlers[0]);
-        $this->assertInstanceOf(\Monolog\Logger::class, $logger);
 
         // check that FS handler has been correctly set
-        $this->assertInstanceOf(StreamHandler::class, $handlers[0]);
-        $this->assertInstanceOf(\Monolog\Logger::class, $logger);
+        $this->assertInstanceOf(StreamHandler::class, $handlers[1]);
     }
 }

@@ -24,7 +24,7 @@ final class ChannelProductsFail implements LogInterface
             'channel_id' => $params[0]->channel_id,
             'client_id'  => $params[0]->client_id,
             'tags'       => [self::TAG],
-            'metric'     => count($params)
+            'metric'     => count($params),
         ]);
         $logger  = new Logger();
         $logger->log($context->level, $context->message, (array)$context);

@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Stock2Shop\Tests\Logger;
 
-use Exception;
+use Exception as E;
 use Stock2Shop\Environment\Env;
 use Stock2Shop\Environment\LoaderArray;
 use Stock2Shop\Logger\Domain;
 use Stock2Shop\Logger\Exception;
 
-class LogExceptionTest extends Base
+class ExceptionTest extends Base
 {
     public const MESSAGE = 'test log';
 
-    public function testSave()
+    public function testLog()
     {
         // test writing logs to file
         $loader = new LoaderArray([
@@ -28,7 +28,7 @@ class LogExceptionTest extends Base
         // clean test file
         $this->resetLogs();
 
-        Exception::log(new Exception(self::MESSAGE));
+        Exception::log(new E(self::MESSAGE));
 
         $parts = $this->getLogs();
 

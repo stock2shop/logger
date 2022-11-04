@@ -29,7 +29,7 @@ class Log
     public ?int $client_id;
     /** @var array{key: string, value: string}|null */
     public ?array $attributes;
-    public ?string $created;
+    public string $created;
     public ?string $ip;
     public bool $log_to_es = false;
     public ?string $method;
@@ -50,7 +50,7 @@ class Log
         $this->channel_id   = (int)($data['channel_id'] ?? null);
         $this->client_id    = (int)($data['client_id'] ?? null);
         $this->attributes   = (array)($data['attributes'] ?? null);
-//        $this->created      = Date::getDateString(($data['created'] ?? null), Date::FORMAT_MS);
+        $this->created      = Date::getDateString();
         $this->ip           = (string)($data['ip'] ?? null);
         $this->log_to_es    = (bool)($data['log_to_es'] ?? null);
         $this->level        = (string)($data['level'] ?? null);
