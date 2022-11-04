@@ -4,5 +4,5 @@ namespace Stock2Shop\Logger;
 
 interface LogInterface
 {
-    public function save(): void;
+    public static function log($params): void;
 }

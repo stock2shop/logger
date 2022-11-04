@@ -56,5 +56,4 @@ class LogChannelProductsSuccessTest extends Base
             $this->assertArrayHasKey('datetime', $obj);
         }
     }
-
 }

@@ -11,49 +11,29 @@ use Stock2Shop\Logger\Handler\HandlerFile;
 
 class Logger extends MonologLogger
 {
-    public const LOG_LEVEL_MAP = [
-        Log::LOG_LEVEL_ERROR    => MonologLogger::ERROR,
-        Log::LOG_LEVEL_DEBUG    => MonologLogger::DEBUG,
-        Log::LOG_LEVEL_INFO     => MonologLogger::INFO,
-        Log::LOG_LEVEL_CRITICAL => MonologLogger::CRITICAL,
-        Log::LOG_LEVEL_WARNING  => MonologLogger::WARNING,
-    ];
-
-    private const LOG_CW_ENABLED = 'LOG_CW_ENABLED';
-    private const LOG_FS_ENABLED = 'LOG_FS_ENABLED';
-    private const LOG_CHANNEL = 'LOG_CHANNEL';
-
     /**
      * @throws Exception
      */
     public function __construct()
     {
-        if (Env::get(self::LOG_CW_ENABLED)) {
-            $handler = HandlerCloudWatch::get();
-        } elseif (Env::get(self::LOG_FS_ENABLED)) {
-            $handler = HandlerFile::get();
+        $handlers = [];
+        if (Env::get(EnvKey::LOG_CW_ENABLED)) {
+            $handlers[] = HandlerCloudWatch::get();
         }
-        if (!isset($handler)) {
+        if (Env::get(EnvKey::LOG_FS_ENABLED)) {
+            $handlers[] = HandlerFile::get();
+        }
+        if (empty($handlers)) {
             throw new InvalidArgumentException('Logging not configured');
         }
-        $handler->setFormatter(new FormatterJson());
+        foreach ($handlers as $handler) {
+            $handler->setFormatter(new FormatterJson());
+        }
 
         // Create monolog instance with config
         parent::__construct(
-            Env::get(self::LOG_CHANNEL),
-            [$handler]
-        );
-    }
-
-
-    public function write(Log $log)
-    {
-        $level       = self::LOG_LEVEL_MAP[$log->level];
-        $log->origin = self::getName();
-        $this->addRecord(
-            $level,
-            $log->message,
-            (array)$log
+            Env::get(EnvKey::LOG_CHANNEL),
+            $handlers
         );
     }
 }
