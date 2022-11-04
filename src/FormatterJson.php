@@ -27,7 +27,7 @@ class FormatterJson extends Formatter\JsonFormatter
 
         // create LogContext and set property values
         // if defined on the record
-        $log = new  Domain\log($record['context']);
+        $log = new  Domain\Log($record['context']);
 
         // Transform record to be consistent with Stock2Shop.
         // Property names must be the same.

@@ -7,7 +7,7 @@ namespace Stock2Shop\Logger;
 class Custom implements LogInterface
 {
     /**
-     * @param  Domain\log $params
+     * @param  Domain\Log $params
      * @return void
      */
     public static function log($params): void
