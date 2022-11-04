@@ -6,7 +6,7 @@ use Monolog\Handler;
 use Monolog\Handler\StreamHandler;
 use Stock2Shop\Environment\Env;
 
-final class HandlerFile implements HandlerInterface
+final class FileHandler implements HandlerInterface
 {
     private const LOG_FS_DIR = 'LOG_FS_DIR';
     private const LOG_FS_FILE_NAME = 'LOG_FS_FILE_NAME';

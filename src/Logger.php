@@ -6,8 +6,8 @@ use Exception;
 use InvalidArgumentException;
 use Monolog\Logger as MonologLogger;
 use Stock2Shop\Environment\Env;
-use Stock2Shop\Logger\Handler\HandlerCloudWatch;
-use Stock2Shop\Logger\Handler\HandlerFile;
+use Stock2Shop\Logger\Handler\CloudWatchHandler;
+use Stock2Shop\Logger\Handler\FileHandler;
 
 class Logger extends MonologLogger
 {
@@ -18,10 +18,10 @@ class Logger extends MonologLogger
     {
         $handlers = [];
         if (Env::get(EnvKey::LOG_CW_ENABLED) == 'true') {
-            $handlers[] = HandlerCloudWatch::get();
+            $handlers[] = CloudWatchHandler::get();
         }
         if (Env::get(EnvKey::LOG_FS_ENABLED) == 'true') {
-            $handlers[] = HandlerFile::get();
+            $handlers[] = FileHandler::get();
         }
         if (empty($handlers)) {
             throw new InvalidArgumentException('Logging not configured');

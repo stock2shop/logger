@@ -9,7 +9,7 @@ use Monolog\Handler;
 use Stock2Shop\Environment\Env;
 use Stock2Shop\Share\Utils\Date;
 
-final class HandlerCloudWatch implements HandlerInterface
+final class CloudWatchHandler implements HandlerInterface
 {
     private const LOG_CW_VERSION = 'LOG_CW_VERSION';
     private const LOG_CW_REGION = 'LOG_CW_REGION';
@@ -37,8 +37,8 @@ final class HandlerCloudWatch implements HandlerInterface
             $client,
             Env::get(self::LOG_CW_GROUP_NAME),
             substr(Date::getDateString(), 0, 10),
-            Env::get(self::LOG_CW_RETENTION_DAYS),
-            Env::get(self::LOG_CW_BATCH_SIZE)
+            (int) Env::get(self::LOG_CW_RETENTION_DAYS),
+            (int) Env::get(self::LOG_CW_BATCH_SIZE)
         );
     }
 }
