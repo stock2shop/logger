@@ -8,6 +8,7 @@ use Stock2Shop\Environment\LoaderArray;
 use Stock2Shop\Environment\Env;
 use Stock2Shop\Logger\Log;
 use Stock2Shop\Logger\LogChannelProductsSuccess;
+use Stock2Shop\Logger\LogContext;
 use Stock2Shop\Share\DTO;
 
 class LogChannelProductsSuccessTest extends Base
@@ -16,8 +17,8 @@ class LogChannelProductsSuccessTest extends Base
     {
         // test writing logs to file
         $loader = new LoaderArray([
-            'LOG_CHANNEL'      => 'Share',
-            'LOG_FS_DIR'       => sprintf('%s/../../output/', __DIR__),
+            'LOG_CHANNEL'      => 'Logger',
+            'LOG_FS_DIR'       => sprintf('%s/output/', __DIR__),
             'LOG_FS_ENABLED'   => 'true',
             'LOG_FS_FILE_NAME' => 'system.log'
         ]);
@@ -36,8 +37,7 @@ class LogChannelProductsSuccessTest extends Base
                 'channel_id' => 2,
             ]
         ]);
-        $log = new LogChannelProductsSuccess($p);
-        $log->save();
+        LogChannelProductsSuccess::log($p);
 
         $parts = $this->getLogs();
 
@@ -46,7 +46,7 @@ class LogChannelProductsSuccessTest extends Base
         $this->assertEquals('', $parts[1]);
         for ($i = 0; $i < 1; $i++) {
             $obj = json_decode($parts[0], true);
-            $this->assertEquals(Log::LOG_LEVEL_INFO, $obj['level']);
+            $this->assertEquals(LogContext::LOG_LEVEL_INFO, $obj['level']);
             $this->assertEquals(LogChannelProductsSuccess::MESSAGE, $obj['message']);
             $this->assertEquals(2, $obj['metric']);
             $this->assertEquals(1, $obj['client_id']);

@@ -11,11 +11,11 @@ use Traversable;
 
 class LogContext
 {
-    public const LOG_LEVEL_ERROR = 'error';
-    public const LOG_LEVEL_DEBUG = 'debug';
-    public const LOG_LEVEL_INFO = 'info';
-    public const LOG_LEVEL_CRITICAL = 'critical';
-    public const LOG_LEVEL_WARNING = 'warning';
+    public const LOG_LEVEL_ERROR = 'ERROR';
+    public const LOG_LEVEL_DEBUG = 'DEBUG';
+    public const LOG_LEVEL_INFO = 'INFO';
+    public const LOG_LEVEL_CRITICAL = 'CRITICAL';
+    public const LOG_LEVEL_WARNING = 'WARNING';
 
     private const ALLOWED_LOG_LEVEL = [
         self::LOG_LEVEL_ERROR,
@@ -48,9 +48,8 @@ class LogContext
         public string $origin
     ) {
         $this->created = Date::getDateString();
-        if(!in_array($this->level, self::ALLOWED_LOG_LEVEL)) {
+        if (!in_array($this->level, self::ALLOWED_LOG_LEVEL)) {
             throw new \InvalidArgumentException('Invalid Log Level ');
         }
     }
-
 }

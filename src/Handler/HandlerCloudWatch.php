@@ -36,7 +36,7 @@ final class HandlerCloudWatch implements HandlerInterface
         return new CloudWatch(
             $client,
             Env::get(self::LOG_CW_GROUP_NAME),
-            substr(Date::getDateString(Date::FORMAT_MS), 0, 10),
+            substr(Date::getDateString(), 0, 10),
             Env::get(self::LOG_CW_RETENTION_DAYS),
             Env::get(self::LOG_CW_BATCH_SIZE)
         );
