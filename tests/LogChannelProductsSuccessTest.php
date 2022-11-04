@@ -6,9 +6,8 @@ namespace Stock2Shop\Tests\Logger;
 
 use Stock2Shop\Environment\LoaderArray;
 use Stock2Shop\Environment\Env;
-use Stock2Shop\Logger\Log;
-use Stock2Shop\Logger\LogChannelProductsSuccess;
-use Stock2Shop\Logger\LogContext;
+use Stock2Shop\Logger\Domain;
+use Stock2Shop\Logger\ChannelProductsSuccess;
 use Stock2Shop\Share\DTO;
 
 class LogChannelProductsSuccessTest extends Base
@@ -37,7 +36,7 @@ class LogChannelProductsSuccessTest extends Base
                 'channel_id' => 2,
             ]
         ]);
-        LogChannelProductsSuccess::log($p);
+        ChannelProductsSuccess::log($p);
 
         $parts = $this->getLogs();
 
@@ -46,12 +45,12 @@ class LogChannelProductsSuccessTest extends Base
         $this->assertEquals('', $parts[1]);
         for ($i = 0; $i < 1; $i++) {
             $obj = json_decode($parts[0], true);
-            $this->assertEquals(LogContext::LOG_LEVEL_INFO, $obj['level']);
-            $this->assertEquals(LogChannelProductsSuccess::MESSAGE, $obj['message']);
+            $this->assertEquals(Domain\log::LOG_LEVEL_INFO, $obj['level']);
+            $this->assertEquals(ChannelProductsSuccess::MESSAGE, $obj['message']);
             $this->assertEquals(2, $obj['metric']);
             $this->assertEquals(1, $obj['client_id']);
             $this->assertEquals(2, $obj['channel_id']);
-            $this->assertEquals(LogChannelProductsSuccess::TAG, $obj['tags'][0]);
+            $this->assertEquals(ChannelProductsSuccess::TAG, $obj['tags'][0]);
             $this->assertArrayNotHasKey('trace', $obj);
             $this->assertArrayHasKey('datetime', $obj);
         }

@@ -7,7 +7,7 @@ namespace Stock2Shop\Logger;
 class Log implements LogInterface
 {
     /**
-     * @param LogContext $params
+     * @param  Domain\log $params
      * @return void
      */
     public static function log($params): void

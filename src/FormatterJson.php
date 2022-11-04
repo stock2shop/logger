@@ -23,28 +23,11 @@ class FormatterJson extends Formatter\JsonFormatter
     public function format(array $record): string
     {
         // normalise record
-        $record          = $this->normalize($record);
+        $record = $this->normalize($record);
 
         // create LogContext and set property values
         // if defined on the record
-        $log             = new LogContext(
-            level: self::$levels[$record['level']],
-            message: $record['message'],
-            origin: $record['message']
-        );
-        $log->channel_id = $record['context']['channel_id'] ?? null;
-        $log->client_id  = $record['context']['client_id'] ?? null;
-        $log->created      = $record['context']['created'] ?? null;
-        $log->ip           = $record['context']['ip'] ?? null;
-        $log->log_to_es    = $record['context']['log_to_es'] ?? null;
-        $log->method       = $record['context']['method'] ?? null;
-        $log->metric       = $record['context']['metric'] ?? null;
-        $log->remote_addr  = $record['context']['remote_addr'] ?? null;
-        $log->request_path = $record['context']['request_path'] ?? null;
-        $log->source_id    = $record['context']['source_id'] ?? null;
-        $log->tags    = $record['context']['tags'] ?? null;
-        $log->trace   = $record['context']['trace'] ?? null;
-        $log->user_id = $record['context']['user_id'] ?? null;
+        $log = new  Domain\log($record['context']);
 
         // Transform record to be consistent with Stock2Shop.
         // Property names must be the same.

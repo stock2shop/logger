@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Stock2Shop\Tests\Logger;
 
 use InvalidArgumentException;
+use Maxbanton\Cwh\Handler\CloudWatch;
 use Monolog\Handler\StreamHandler;
 use Stock2Shop\Environment\Env;
 use Stock2Shop\Environment\LoaderArray;
@@ -56,16 +57,25 @@ class LoggerTest extends Base
             EnvKey::LOG_CW_BATCH_SIZE     => '10000',
 
             // FS handler configuration
-            EnvKey::LOG_FS_ENABLED   => 'true',
-            EnvKey::LOG_FS_DIR       => sprintf('%s/output/', __DIR__),
-            EnvKey::LOG_FS_FILE_NAME => 'system.log',
+            EnvKey::LOG_FS_ENABLED        => 'true',
+            EnvKey::LOG_FS_DIR            => sprintf('%s/output/', __DIR__),
+            EnvKey::LOG_FS_FILE_NAME      => 'system.log',
 
             // logger name
-            EnvKey::LOG_CHANNEL      => 'Share'
+            EnvKey::LOG_CHANNEL           => 'Share'
         ]);
         Env::set($loader);
         $logger   = new Logger();
         $handlers = $logger->getHandlers();
         $this->assertCount(2, $handlers);
+        $this->assertEquals(Env::get(EnvKey::LOG_CHANNEL), $logger->getName());
+
+        // check that CWL handler has been set correctly
+        $this->assertInstanceOf(CloudWatch::class, $handlers[0]);
+        $this->assertInstanceOf(\Monolog\Logger::class, $logger);
+
+        // check that FS handler has been correctly set
+        $this->assertInstanceOf(StreamHandler::class, $handlers[0]);
+        $this->assertInstanceOf(\Monolog\Logger::class, $logger);
     }
 }

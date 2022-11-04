@@ -7,9 +7,8 @@ namespace Stock2Shop\Tests\Logger;
 use Exception;
 use Stock2Shop\Environment\Env;
 use Stock2Shop\Environment\LoaderArray;
-use Stock2Shop\Logger\Log;
-use Stock2Shop\Logger\LogContext;
-use Stock2Shop\Logger\LogException;
+use Stock2Shop\Logger\Domain;
+use Stock2Shop\Logger\Exception;
 
 class LogExceptionTest extends Base
 {
@@ -29,7 +28,7 @@ class LogExceptionTest extends Base
         // clean test file
         $this->resetLogs();
 
-        LogException::log(new Exception(self::MESSAGE));
+        Exception::log(new Exception(self::MESSAGE));
 
         $parts = $this->getLogs();
 
@@ -38,7 +37,7 @@ class LogExceptionTest extends Base
         $this->assertEquals('', $parts[1]);
         for ($i = 0; $i < 3; $i++) {
             $obj = json_decode($parts[0], true);
-            $this->assertEquals(LogContext::LOG_LEVEL_ERROR, $obj['level']);
+            $this->assertEquals(Domain\log::LOG_LEVEL_ERROR, $obj['level']);
             $this->assertEquals(self::MESSAGE, $obj['message']);
             $this->assertEquals(0, $obj['client_id']);
             $this->assertNotEmpty($obj['trace']);
