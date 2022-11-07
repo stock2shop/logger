@@ -40,9 +40,9 @@ class ExceptionTest extends Base
             $this->assertEquals(Domain\Log::LOG_LEVEL_ERROR, $obj['level']);
             $this->assertEquals(self::MESSAGE, $obj['message']);
             $this->assertEquals(0, $obj['client_id']);
-            $this->assertNotEmpty($obj['trace']);
-            $this->assertArrayNotHasKey('tags', $obj);
-            $this->assertArrayHasKey('datetime', $obj);
+            $this->assertArrayHasKey('trace', $obj);
+            $this->assertArrayHasKey('tags', $obj);
+            $this->assertNotEmpty($obj['created']);
         }
     }
 }
