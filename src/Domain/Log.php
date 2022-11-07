@@ -6,7 +6,7 @@ namespace Stock2Shop\Logger\Domain;
 
 use Stock2Shop\Share\Utils\Date;
 
-/** @psalm-type Level = self::LOG_LEVEL_ERROR|self::LOG_LEVEL_INFO|self::LOG_LEVEL_WARNING|self::LOG_LEVEL_CRITICAL|self::LOG_LEVEL_DEBUG */
+/** @psalm-type Level = self::LOG_LEVEL_ERROR|self::LOG_LEVEL_DEBUG|self::LOG_LEVEL_INFO|self::LOG_LEVEL_CRITICAL|self::LOG_LEVEL_WARNING */
 class Log
 {
     public const LOG_LEVEL_ERROR = 'error';
