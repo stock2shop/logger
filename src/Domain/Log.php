@@ -45,8 +45,8 @@ class Log
 
     /**
      * @param array{
-     *     channel_id?: int,
-     *     client_id?: int,
+     *     channel_id?: int|null,
+     *     client_id?: int|null,
      *     attributes?: array<string, mixed>,
      *     created?: string,
      *     ip?: string,
@@ -60,7 +60,7 @@ class Log
      *     request_path?: string,
      *     source_id?: int,
      *     tags?: array<int, string>,
-     *     trace?: array<int, string>,
+     *     trace?: array<array-key, mixed>,
      *     user_id?: int} $data
      */
     public function __construct(array $data)
