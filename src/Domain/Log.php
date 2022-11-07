@@ -27,8 +27,8 @@ class Log
     public string $origin;
     public ?int $channel_id;
     public ?int $client_id;
-    /** @var array{key: string, value: string}|null */
-    public ?array $attributes;
+    /** @var array<string, mixed> */
+    public array $attributes;
     public string $created;
     public ?string $ip;
     public bool $log_to_es = false;
@@ -37,9 +37,10 @@ class Log
     public ?string $remote_addr;
     public ?string $request_path;
     public ?int $source_id;
-    /** @var string[]|null */
-    public ?array $tags;
-    public ?array $trace;
+    /** @var string[] */
+    public array $tags;
+    /** @var string[]  */
+    public array $trace;
     public ?int $user_id;
 
     /**
