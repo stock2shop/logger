@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e471df3fce8a537b12867ea03e8d88b7",
+    "content-hash": "5d6e3dd0825f46edce3c491087903b70",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -58,16 +58,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.240.9",
+            "version": "3.240.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "ee0bde83538e5acbb4f84f79a12b651ccb19017b"
+                "reference": "84b8229fc25cf787876047b6a73b202209853e79"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ee0bde83538e5acbb4f84f79a12b651ccb19017b",
-                "reference": "ee0bde83538e5acbb4f84f79a12b651ccb19017b",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/84b8229fc25cf787876047b6a73b202209853e79",
+                "reference": "84b8229fc25cf787876047b6a73b202209853e79",
                 "shasum": ""
             },
             "require": {
@@ -146,9 +146,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.240.9"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.240.10"
             },
-            "time": "2022-11-03T18:18:02+00:00"
+            "time": "2022-11-04T19:25:00+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -1093,16 +1093,16 @@
         },
         {
             "name": "stock2shop/environment",
-            "version": "v0.1.1",
+            "version": "v0.2.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:stock2shop/environment.git",
-                "reference": "afd2bf6383474f9a819e6953994ae8f60663e3b2"
+                "reference": "b8832dae99ea9d6ba290427b4b0d59fd90b6271a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stock2shop/environment/zipball/afd2bf6383474f9a819e6953994ae8f60663e3b2",
-                "reference": "afd2bf6383474f9a819e6953994ae8f60663e3b2",
+                "url": "https://api.github.com/repos/stock2shop/environment/zipball/b8832dae99ea9d6ba290427b4b0d59fd90b6271a",
+                "reference": "b8832dae99ea9d6ba290427b4b0d59fd90b6271a",
                 "shasum": ""
             },
             "require": {
@@ -1110,7 +1110,9 @@
                 "vlucas/phpdotenv": "^5.4"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9"
+                "friendsofphp/php-cs-fixer": "^3.12",
+                "phpunit/phpunit": "^9",
+                "vimeo/psalm": "^4.29"
             },
             "type": "library",
             "autoload": {
@@ -1130,10 +1132,10 @@
                 }
             ],
             "support": {
-                "source": "https://github.com/stock2shop/environment/tree/v0.1.1",
+                "source": "https://github.com/stock2shop/environment/tree/v0.2.0",
                 "issues": "https://github.com/stock2shop/environment/issues"
             },
-            "time": "2022-11-02T15:11:01+00:00"
+            "time": "2022-11-05T13:33:55+00:00"
         },
         {
             "name": "stock2shop/share",
@@ -3401,6 +3403,66 @@
             "time": "2022-10-28T06:00:21+00:00"
         },
         {
+            "name": "psalm/plugin-phpunit",
+            "version": "0.18.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/psalm/psalm-plugin-phpunit.git",
+                "reference": "057c1cdf7546c1e427f6fd83b635d0cc18c252bf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/psalm/psalm-plugin-phpunit/zipball/057c1cdf7546c1e427f6fd83b635d0cc18c252bf",
+                "reference": "057c1cdf7546c1e427f6fd83b635d0cc18c252bf",
+                "shasum": ""
+            },
+            "require": {
+                "composer/package-versions-deprecated": "^1.10",
+                "composer/semver": "^1.4 || ^2.0 || ^3.0",
+                "ext-simplexml": "*",
+                "php": "^7.1 || ^8.0",
+                "vimeo/psalm": "dev-master || dev-4.x || ^4.5 || ^5@beta"
+            },
+            "conflict": {
+                "phpunit/phpunit": "<7.5"
+            },
+            "require-dev": {
+                "codeception/codeception": "^4.0.3",
+                "php": "^7.3 || ^8.0",
+                "phpunit/phpunit": "^7.5 || ^8.0 || ^9.0",
+                "squizlabs/php_codesniffer": "^3.3.1",
+                "weirdan/codeception-psalm-module": "^0.11.0",
+                "weirdan/prophecy-shim": "^1.0 || ^2.0"
+            },
+            "type": "psalm-plugin",
+            "extra": {
+                "psalm": {
+                    "pluginClass": "Psalm\\PhpUnitPlugin\\Plugin"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psalm\\PhpUnitPlugin\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Brown",
+                    "email": "github@muglug.com"
+                }
+            ],
+            "description": "Psalm plugin for PHPUnit",
+            "support": {
+                "issues": "https://github.com/psalm/psalm-plugin-phpunit/issues",
+                "source": "https://github.com/psalm/psalm-plugin-phpunit/tree/0.18.3"
+            },
+            "time": "2022-11-03T18:17:28+00:00"
+        },
+        {
             "name": "psr/cache",
             "version": "3.0.0",
             "source": {
@@ -5557,16 +5619,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "4.29.0",
+            "version": "4.30.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "7ec5ffbd5f68ae03782d7fd33fff0c45a69f95b3"
+                "reference": "d0bc6e25d89f649e4f36a534f330f8bb4643dd69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/7ec5ffbd5f68ae03782d7fd33fff0c45a69f95b3",
-                "reference": "7ec5ffbd5f68ae03782d7fd33fff0c45a69f95b3",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/d0bc6e25d89f649e4f36a534f330f8bb4643dd69",
+                "reference": "d0bc6e25d89f649e4f36a534f330f8bb4643dd69",
                 "shasum": ""
             },
             "require": {
@@ -5659,9 +5721,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vimeo/psalm/issues",
-                "source": "https://github.com/vimeo/psalm/tree/4.29.0"
+                "source": "https://github.com/vimeo/psalm/tree/4.30.0"
             },
-            "time": "2022-10-11T17:09:17+00:00"
+            "time": "2022-11-06T20:37:08+00:00"
         },
         {
             "name": "webmozart/assert",

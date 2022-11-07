@@ -32,7 +32,7 @@
     "php": ">=8.1",
     "monolog/monolog": "^2.8.0",
     "stock2shop/share": "^0.2",
-    "stock2shop/environment": "^0.1",
+    "stock2shop/environment": "^0.2",
     "aws/aws-sdk-php": "^3.238",
     "maxbanton/cwh": "^2.0.2",
     "vlucas/phpdotenv": "^5.4",
@@ -41,6 +41,7 @@
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.12",
     "phpunit/phpunit": "^9",
-    "vimeo/psalm": "^4.29"
+    "vimeo/psalm": "^4.29",
+    "psalm/plugin-phpunit": "^0.18.3"
   }
 }

@@ -12,7 +12,7 @@ use Stock2Shop\Share\Utils\Date;
 
 class CustomTest extends Base
 {
-    public function testLog()
+    public function testLog(): void
     {
         // test writing logs to file
         $loader = new LoaderArray([
@@ -59,11 +59,11 @@ class CustomTest extends Base
             $obj = json_decode($parts[0], true);
             $this->assertEquals(1, $obj['channel_id']);
             $this->assertEquals(21, $obj['client_id']);
-            $this->assertCount(2, $obj['attributes']);
-            foreach ($obj['attributes'] as $index => $attribute) {
+            $this->assertArrayNotHasKey('attributes', $obj);
+            foreach ($log->attributes as $key => $value) {
                 $this->assertEquals(
-                    sprintf("value%d", $index + 1),
-                    $attribute[sprintf("key%d", $index + 1)]
+                    $value,
+                    $obj[$key]
                 );
             }
             $this->assertNotEmpty($obj['created']);

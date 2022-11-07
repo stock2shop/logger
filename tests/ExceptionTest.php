@@ -14,7 +14,7 @@ class ExceptionTest extends Base
 {
     public const MESSAGE = 'test log';
 
-    public function testLog()
+    public function testLog(): void
     {
         // test writing logs to file
         $loader = new LoaderArray([
@@ -37,7 +37,7 @@ class ExceptionTest extends Base
         $this->assertEquals('', $parts[1]);
         for ($i = 0; $i < 3; $i++) {
             $obj = json_decode($parts[0], true);
-            $this->assertEquals(Domain\log::LOG_LEVEL_ERROR, $obj['level']);
+            $this->assertEquals(Domain\Log::LOG_LEVEL_ERROR, $obj['level']);
             $this->assertEquals(self::MESSAGE, $obj['message']);
             $this->assertEquals(0, $obj['client_id']);
             $this->assertNotEmpty($obj['trace']);

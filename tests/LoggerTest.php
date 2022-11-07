@@ -14,7 +14,7 @@ use Stock2Shop\Logger\Logger;
 
 class LoggerTest extends Base
 {
-    public function testInvalidHandler()
+    public function testInvalidHandler(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $loader = new LoaderArray([
@@ -25,7 +25,7 @@ class LoggerTest extends Base
         new Logger();
     }
 
-    public function testSetOneHandler()
+    public function testSetOneHandler(): void
     {
         $loader = new LoaderArray([
             EnvKey::LOG_CW_ENABLED   => 'false',
@@ -43,7 +43,7 @@ class LoggerTest extends Base
         $this->assertEquals(Env::get(EnvKey::LOG_CHANNEL), $logger->getName());
     }
 
-    public function testSetMultipleHandlers()
+    public function testSetMultipleHandlers(): void
     {
         $loader = new LoaderArray([
             // CWL handler configuration
