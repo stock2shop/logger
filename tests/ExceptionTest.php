@@ -14,7 +14,7 @@ class ExceptionTest extends Base
 {
     public const MESSAGE = 'test log';
 
-    public function testLog(): void
+    public function testLogBasic(): void
     {
         // test writing logs to file
         $loader = new LoaderArray([
@@ -28,7 +28,7 @@ class ExceptionTest extends Base
         // clean test file
         $this->resetLogs();
 
-        Exception::log(new E(self::MESSAGE));
+        Exception::log(new E(self::MESSAGE), null);
 
         $parts = $this->getLogs();
 
@@ -42,6 +42,48 @@ class ExceptionTest extends Base
             $this->assertEquals(0, $obj['client_id']);
             $this->assertArrayHasKey('trace', $obj);
             $this->assertArrayHasKey('tags', $obj);
+            $this->assertNotEmpty($obj['created']);
+        }
+    }
+
+    public function testLogComplex(): void
+    {
+        // test writing logs to file
+        $loader = new LoaderArray([
+            'LOG_CHANNEL'      => 'Logger',
+            'LOG_FS_DIR'       => sprintf('%s/output/', __DIR__),
+            'LOG_FS_ENABLED'   => 'true',
+            'LOG_FS_FILE_NAME' => 'system.log'
+        ]);
+        Env::set($loader);
+
+        // clean test file
+        $this->resetLogs();
+
+        Exception::log(new E(self::MESSAGE), [
+            'level'        => Domain\Log::LOG_LEVEL_INFO,
+            'message'      => 'message',
+            'origin'       => 'origin',
+            'metric'       => 10,
+            'remote_addr'  => 'remote_addr',
+            'request_path' => 'request_path',
+        ]);
+
+        $parts = $this->getLogs();
+
+        // 4 lines, one is space at end
+        $this->assertCount(2, $parts);
+        $this->assertEquals('', $parts[1]);
+        for ($i = 0; $i < 3; $i++) {
+            $obj = json_decode($parts[0], true);
+            $this->assertEquals(Domain\Log::LOG_LEVEL_ERROR, $obj['level']);
+            $this->assertEquals(self::MESSAGE, $obj['message']);
+            $this->assertEquals(0, $obj['client_id']);
+            $this->assertArrayHasKey('trace', $obj);
+            $this->assertArrayHasKey('tags', $obj);
+            $this->assertEquals(10, $obj['metric']);
+            $this->assertEquals('remote_addr', $obj['remote_addr']);
+            $this->assertEquals('request_path', $obj['request_path']);
             $this->assertNotEmpty($obj['created']);
         }
     }

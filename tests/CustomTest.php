@@ -12,7 +12,7 @@ use Stock2Shop\Share\Utils\Date;
 
 class CustomTest extends Base
 {
-    public function testLog(): void
+    public function testLogBasic(): void
     {
         // test writing logs to file
         $loader = new LoaderArray([
@@ -26,7 +26,43 @@ class CustomTest extends Base
         // clean test file
         $this->resetLogs();
 
-        $log = new Domain\Log([
+        Custom::log([
+            'level'   => Domain\Log::LOG_LEVEL_INFO,
+            'message' => 'message',
+            'origin'  => 'origin',
+        ]);
+
+        $parts = $this->getLogs();
+
+        // 4 lines, one is space at end
+        $this->assertCount(2, $parts);
+        $this->assertEquals('', $parts[1]);
+        for ($i = 0; $i < 1; $i++) {
+            $obj = json_decode($parts[0], true);
+            $this->assertEquals(Domain\Log::LOG_LEVEL_INFO, $obj['level']);
+            $this->assertEquals('message', $obj['message']);
+            $this->assertEquals('origin', $obj['origin']);
+            $this->assertArrayHasKey('trace', $obj);
+            $this->assertArrayHasKey('tags', $obj);
+            $this->assertNotEmpty($obj['created']);
+        }
+    }
+
+    public function testLogComplex(): void
+    {
+        // test writing logs to file
+        $loader = new LoaderArray([
+            'LOG_CHANNEL'      => 'Logger',
+            'LOG_FS_DIR'       => sprintf('%s/output/', __DIR__),
+            'LOG_FS_ENABLED'   => 'true',
+            'LOG_FS_FILE_NAME' => 'system.log'
+        ]);
+        Env::set($loader);
+
+        // clean test file
+        $this->resetLogs();
+
+        Custom::log([
             'channel_id'   => 1,
             'client_id'    => 21,
             'attributes'   => [
@@ -48,7 +84,6 @@ class CustomTest extends Base
             'trace'        => ['trace'],
             'user_id'      => 1,
         ]);
-        Custom::log($log);
 
         $parts = $this->getLogs();
 
@@ -60,13 +95,10 @@ class CustomTest extends Base
             $this->assertEquals(1, $obj['channel_id']);
             $this->assertEquals(21, $obj['client_id']);
             $this->assertArrayNotHasKey('attributes', $obj);
-            foreach ($log->attributes as $key => $value) {
-                $this->assertEquals(
-                    $value,
-                    $obj[$key]
-                );
-            }
-            $this->assertNotEmpty($obj['created']);
+            $this->assertArrayHasKey('key1', $obj);
+            $this->assertArrayHasKey('key2', $obj);
+            $this->assertEquals('value1', $obj['key1']);
+            $this->assertEquals('value2', $obj['key2']);
             $this->assertEquals('ip', $obj['ip']);
             $this->assertTrue($obj['log_to_es']);
             $this->assertEquals(Domain\Log::LOG_LEVEL_INFO, $obj['level']);
@@ -77,8 +109,9 @@ class CustomTest extends Base
             $this->assertEquals('remote_addr', $obj['remote_addr']);
             $this->assertEquals('request_path', $obj['request_path']);
             $this->assertEquals(57, $obj['source_id']);
-            $this->assertEquals(['tags'], $obj['tags']);
-            $this->assertEquals(['trace'], $obj['trace']);
+            $this->assertArrayHasKey('trace', $obj);
+            $this->assertArrayHasKey('tags', $obj);
+            $this->assertNotEmpty($obj['created']);
             $this->assertEquals(1, $obj['user_id']);
         }
     }

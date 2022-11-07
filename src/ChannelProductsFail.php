@@ -6,7 +6,7 @@ use Stock2Shop\Environment\Env;
 use Stock2Shop\Share\DTO;
 use Stock2Shop\Logger\Domain;
 
-final class ChannelProductsFail implements LogInterface
+final class ChannelProductsFail
 {
     public const TAG = 'sync_channel_products';
     public const MESSAGE = 'Channel Sync Products Failed';
@@ -14,7 +14,7 @@ final class ChannelProductsFail implements LogInterface
     /**
      * @param DTO\ChannelProduct[] $params
      */
-    public static function log($params): void
+    public static function log(array $params): void
     {
         $context = new Domain\Log([
             'level'      => Domain\Log::LOG_LEVEL_ERROR,

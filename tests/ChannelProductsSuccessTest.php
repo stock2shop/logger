@@ -26,7 +26,7 @@ class ChannelProductsSuccessTest extends Base
         // clean test file
         $this->resetLogs();
 
-        $p = DTO\ChannelProduct::createArray([
+        ChannelProductsSuccess::log(DTO\ChannelProduct::createArray([
             [
                 'client_id'  => 1,
                 'channel_id' => 2,
@@ -35,8 +35,7 @@ class ChannelProductsSuccessTest extends Base
                 'client_id'  => 1,
                 'channel_id' => 2,
             ]
-        ]);
-        ChannelProductsSuccess::log($p);
+        ]));
 
         $parts = $this->getLogs();
 

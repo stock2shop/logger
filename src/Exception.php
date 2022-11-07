@@ -5,21 +5,26 @@ namespace Stock2Shop\Logger;
 use Stock2Shop\Environment\Env;
 use Throwable;
 
-final class Exception implements LogInterface
+/**
+ * @psalm-import-type Fields from Domain\Log
+ */
+final class Exception
 {
     /**
-     * @param Throwable $params
+     * @param Throwable $e
+     * @param Fields|null $params
      * @return void
      */
-    public static function log($params): void
+    public static function log(Throwable $e, ?array $params): void
     {
-        $context = new Domain\Log([
+        $arr     = array_merge($params ?? [], [
             'level'     => Domain\Log::LOG_LEVEL_ERROR,
-            'message'   => $params->getMessage(),
+            'message'   => $e->getMessage(),
             'origin'    => Env::get(EnvKey::LOG_CHANNEL),
-            'trace'     => $params->getTrace(),
+            'trace'     => $e->getTrace(),
             'client_id' => 0,
         ]);
+        $context = new Domain\Log($arr);
         $logger  = new Logger();
         $logger->log($context->level, $context->message, (array)$context);
     }

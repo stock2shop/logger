@@ -27,7 +27,7 @@ class ChannelProductsFailTest extends Base
         // clean test file
         $this->resetLogs();
 
-        $p   = DTO\ChannelProduct::createArray([
+        ChannelProductsFail::log(DTO\ChannelProduct::createArray([
             [
                 'client_id'  => 1,
                 'channel_id' => 2,
@@ -36,8 +36,7 @@ class ChannelProductsFailTest extends Base
                 'client_id'  => 1,
                 'channel_id' => 2,
             ]
-        ]);
-        ChannelProductsFail::log($p);
+        ]));
 
         $parts = $this->getLogs();
 

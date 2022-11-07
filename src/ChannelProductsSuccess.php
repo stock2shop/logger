@@ -5,7 +5,7 @@ namespace Stock2Shop\Logger;
 use Stock2Shop\Environment\Env;
 use Stock2Shop\Share\DTO;
 
-final class ChannelProductsSuccess implements LogInterface
+final class ChannelProductsSuccess
 {
     public const TAG = 'sync_channel_products';
     public const MESSAGE = 'Channel Sync Products';
@@ -13,7 +13,7 @@ final class ChannelProductsSuccess implements LogInterface
     /**
      * @param DTO\ChannelProduct[] $params
      */
-    public static function log($params): void
+    public static function log(array $params): void
     {
         $context = new Domain\Log([
             'level'      => Domain\Log::LOG_LEVEL_INFO,

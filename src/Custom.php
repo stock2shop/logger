@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace Stock2Shop\Logger;
 
-class Custom implements LogInterface
+use Stock2Shop\Logger\Domain\Log;
+
+/**
+ * @psalm-import-type Fields from Log
+ */
+class Custom
 {
     /**
-     * @param  Domain\Log $params
-     * @return void
+     * @param Fields $params
      */
     public static function log($params): void
     {
+        $log = new Domain\Log($params);
         $logger = new Logger();
-        $logger->log($params->level, $params->message, (array) $params);
+        $logger->log($log->level, $log->message, $params);
     }
 }

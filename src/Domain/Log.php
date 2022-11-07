@@ -6,7 +6,27 @@ namespace Stock2Shop\Logger\Domain;
 
 use Stock2Shop\Share\Utils\Date;
 
-/** @psalm-type Level = self::LOG_LEVEL_ERROR|self::LOG_LEVEL_DEBUG|self::LOG_LEVEL_INFO|self::LOG_LEVEL_CRITICAL|self::LOG_LEVEL_WARNING */
+/**
+ * @psalm-type Level = self::LOG_LEVEL_ERROR|self::LOG_LEVEL_DEBUG|self::LOG_LEVEL_INFO|self::LOG_LEVEL_CRITICAL|self::LOG_LEVEL_WARNING
+ * @psalm-type Fields = array{
+ *     channel_id?: int|null,
+ *     client_id?: int|null,
+ *     attributes?: array<string, mixed>,
+ *     created?: string,
+ *     ip?: string,
+ *     log_to_es?: bool,
+ *     level: Level,
+ *     message: string,
+ *     method?: string,
+ *     metric?: float,
+ *     origin: string,
+ *     remote_addr?: string,
+ *     request_path?: string,
+ *     source_id?: int,
+ *     tags?: array<int, string>,
+ *     trace?: array<array-key, mixed>,
+ *     user_id?: int}
+ */
 class Log
 {
     public const LOG_LEVEL_ERROR = 'error';
@@ -39,31 +59,14 @@ class Log
     public ?string $remote_addr;
     public ?string $request_path;
     public ?int $source_id;
-    /** @var string[] */
+    /** @var array<int, string> */
     public array $tags;
-    /** @var string[]  */
+    /** @var array<array-key, mixed> */
     public array $trace;
     public ?int $user_id;
 
     /**
-     * @param array{
-     *     channel_id?: int|null,
-     *     client_id?: int|null,
-     *     attributes?: array<string, mixed>,
-     *     created?: string,
-     *     ip?: string,
-     *     log_to_es?: bool,
-     *     level: Level,
-     *     message: string,
-     *     method?: string,
-     *     metric?: float,
-     *     origin: string,
-     *     remote_addr?: string,
-     *     request_path?: string,
-     *     source_id?: int,
-     *     tags?: array<int, string>,
-     *     trace?: array<array-key, mixed>,
-     *     user_id?: int} $data
+     * @param Fields $data
      */
     public function __construct(array $data)
     {
@@ -94,7 +97,7 @@ class Log
      */
     public function flatten(): array
     {
-        $arr = (array) $this;
+        $arr = (array)$this;
         // attributes are flattened to root
         foreach ($arr['attributes'] as $k => $v) {
             $arr[$k] = $v;
