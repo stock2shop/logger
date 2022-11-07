@@ -6,6 +6,7 @@ namespace Stock2Shop\Logger\Domain;
 
 use Stock2Shop\Share\Utils\Date;
 
+/** @psalm-type Level = self::LOG_LEVEL_ERROR|self::LOG_LEVEL_INFO|self::LOG_LEVEL_WARNING|self::LOG_LEVEL_CRITICAL|self::LOG_LEVEL_DEBUG */
 class Log
 {
     public const LOG_LEVEL_ERROR = 'error';
@@ -22,6 +23,7 @@ class Log
         self::LOG_LEVEL_WARNING
     ];
 
+    /** @var Level */
     public string $level;
     public string $message;
     public string $origin;
@@ -51,7 +53,7 @@ class Log
      *     created?: string,
      *     ip?: string,
      *     log_to_es?: bool,
-     *     level: string,
+     *     level: Level,
      *     message: string,
      *     method?: string,
      *     metric?: float,
