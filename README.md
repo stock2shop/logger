@@ -1,64 +1,104 @@
-# Logger
+# Stock2Shop Logger
 
-Stock2Shop logging package for use with [Monolog](https://github.com/Seldaek/monolog).
+Logging utility to write logs for Stock2Shop applications.
 
-The logger is able to handle multiple writers which can be found in the `src/Handler` directory.
+Logs are written as a JSON string and can be configured to write to multiple locations. 
+
+Currently, we support Cloudwatch and File system logs.
+Whilst developing your application, set the logger to write to the file system.
+
+Configure the logger by creating the [appropriate Environment](src/EnvKey.php) variables.
 
 -----
 
 ## Usage
 
-### Instantiation
+### Custom Log
 
-- The base logger type does not need to be explicitly instantiated,
-  instead it gets created whenever a Stock2Shop Log is to be written
-
-```php
-Logger\Custom::log($params);
-```
-
-### Setting Handlers
-
-- Handlers are set based off of your environment.
-- To enable writing to file set the `LOG_FS_ENABLED` .env variable
-
-```dotenv
-LOG_FS_ENABLED=true
-```
-
-- To enable writing to CloudWatchLogs set the `LOG_CW_ENABLED` .env variable
-
-```dotenv
-LOG_CW_ENABLED=true
-```
-
-- Any handler can be disabled by setting the `LOG_*_ENABLED` key to `false`
-
-### Writing a log
+Logging with bare minimum fields.
 
 ```php
-$log = new Domain\Log([...]);
-Logger\Custom::log($log);
+Logger\Custom::log([
+    'level' => LogLevel::INFO,
+    'message' => 'Hi',
+    'origin' => 'MyApp'
+]);
 ```
 
-### Writing an exception
+A more detailed example
 
 ```php
-Logger\Exception::log(new Exception(self::MESSAGE));
+Logger\Custom::log([
+    'level' => LogLevel::INFO,
+    'message' => 'Hi',
+    'origin' => 'MyApp',
+    'client_id' => 21,
+    'tags' => ['a']
+]);
 ```
 
------
+### Exception Log
 
-## Tests
+```php
+try {
+    throw new \Exception('BooHoo')
+} catch(\Exception $e) {
+    Logger\Exception::log($e);
+}
+```
 
-- All unit tests can be run with the following command:
+Adding in some more detail for the exception
+
+```php
+try {
+    throw new \Exception('BooHoo')
+} catch(\Exception $e) {
+    Logger\Exception::log($e, ['client_id' => 21]);
+}
+```
+
+### Action Specific Log
+
+Example logging successful product sync to a channel
+
+```php
+$dtoArray = DTO\ChannelProduct::createArray([
+    [
+        'client_id'  => 1,
+        'channel_id' => 2,
+    ]
+]);
+Logger\ChannelProductsSuccess::log($dtoArray);
+```
+
+## Configuration
+
+See `.env.sample` or [EnvKey](src/EnvKey.php) for a list of options
+
+To enable file based logging, set environment variables before calling logger.
+
+```php
+$loader = new LoaderArray([
+    'LOG_CHANNEL'      => 'Logger',
+    'LOG_FS_DIR'       => 'output/dir',
+    'LOG_FS_ENABLED'   => 'true',
+    'LOG_FS_FILE_NAME' => 'my.log'
+]);
+Env::set($loader);
+```
+
+You could enable multiple handlers, (you would need to include all their required config)
+
+```php
+$loader = new LoaderArray([
+    'LOG_FS_ENABLED' => 'true',
+    'LOG_CW_ENABLED' => 'true'
+]);
+Env::set($loader);
+```
+
+## Running Tests
 
 ```bash
 ./vendor/bin/phpunit
-```
-
-- Or you can run a specific test file:
-
-```bash
-./vendor/bin/phpunit tests/LoggerTest.php
 ```
