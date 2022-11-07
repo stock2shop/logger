@@ -6,9 +6,6 @@ https://phpunit.de/manual/current/en/appendixes.configuration.html
     <testsuites>
         <testsuite name="All">
             <directory>./tests</directory>
-            <exclude>./tests/ErrorTest.php</exclude>
-            <exclude>./tests/ExceptionTest.php</exclude>
-            <exclude>./tests/ShutDownTest.php</exclude>
         </testsuite>
     </testsuites>
 </phpunit>
