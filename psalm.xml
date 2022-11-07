@@ -19,4 +19,4 @@
             </errorLevel>
         </UndefinedAttributeClass>
     </issueHandlers>
-<plugins><pluginClass class="Psalm\PhpUnitPlugin\Plugin"/></plugins></psalm>
+</psalm>
