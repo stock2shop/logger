@@ -12,4 +12,11 @@
             <directory name="vendor"/>
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <UndefinedAttributeClass>
+            <errorLevel type="suppress">
+                <referencedClass name="JetBrains\PhpStorm\ExpectedValues" />
+            </errorLevel>
+        </UndefinedAttributeClass>
+    </issueHandlers>
 <plugins><pluginClass class="Psalm\PhpUnitPlugin\Plugin"/></plugins></psalm>
