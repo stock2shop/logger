@@ -6,6 +6,7 @@ use Exception;
 use InvalidArgumentException;
 use Monolog\Logger as MonologLogger;
 use Stock2Shop\Environment\Env;
+use Stock2Shop\Logger\Formatter\Json;
 use Stock2Shop\Logger\Handler\CloudWatchHandler;
 use Stock2Shop\Logger\Handler\FileHandler;
 
@@ -27,7 +28,7 @@ class Logger extends MonologLogger
             throw new InvalidArgumentException('Logging not configured');
         }
         foreach ($handlers as $handler) {
-            $handler->setFormatter(new FormatterJson());
+            $handler->setFormatter(new Json());
         }
 
         // Create monolog instance with config

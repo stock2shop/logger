@@ -43,13 +43,30 @@ class Log
     public ?int $user_id;
 
     /**
-     * @param array{ channel_id: int|null, client_id: int, context: array, created: Date, ip: string, log_to_es: bool, level: string, message: string, method: string, metric: float, origin: string, remote_addr: string, request_path: string, source_id: int, tags: array, trace: array, user_id: int} $data
+     * @param array{
+     *     channel_id?: int|null,
+     *     client_id?: int,
+     *     attributes?: array<string, mixed>,
+     *     created?: string,
+     *     ip?: string,
+     *     log_to_es?: bool,
+     *     level: string,
+     *     message: string,
+     *     method?: string,
+     *     metric?: float,
+     *     origin: string,
+     *     remote_addr?: string,
+     *     request_path?: string,
+     *     source_id?: int,
+     *     tags?: array<int, string>,
+     *     trace?: array<int, string>,
+     *     user_id?: int} $data
      */
     public function __construct(array $data)
     {
         $this->channel_id   = (int)($data['channel_id'] ?? null);
         $this->client_id    = (int)($data['client_id'] ?? null);
-        $this->attributes   = (array)($data['attributes'] ?? null);
+        $this->attributes   = (array)($data['attributes'] ?? []);
         $this->created      = Date::getDateString();
         $this->ip           = (string)($data['ip'] ?? null);
         $this->log_to_es    = (bool)($data['log_to_es'] ?? null);
@@ -61,11 +78,25 @@ class Log
         $this->remote_addr  = (string)($data['remote_addr'] ?? null);
         $this->request_path = (string)($data['request_path'] ?? null);
         $this->source_id    = (int)($data['source_id'] ?? null);
-        $this->tags         = (array)($data['tags'] ?? null);
-        $this->trace        = (array)($data['trace'] ?? null);
+        $this->tags         = (array)($data['tags'] ?? []);
+        $this->trace        = (array)($data['trace'] ?? []);
         $this->user_id      = (int)($data['user_id'] ?? null);
         if (!in_array($this->level, self::ALLOWED_LOG_LEVEL)) {
             throw new \InvalidArgumentException(sprintf('Invalid log level %s', $this->level));
         }
+    }
+
+    /**
+     * TODO write test
+     * @return array<string, mixed>
+     */
+    public function flatten(): array {
+        $arr = (array) $this;
+        // attributes are flattened to root
+        foreach ($arr['attributes'] as $k => $v) {
+            $arr[$k] = $v;
+        }
+        unset($arr['attributes']);
+        return $arr;
     }
 }

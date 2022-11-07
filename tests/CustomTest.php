@@ -6,7 +6,6 @@ namespace Stock2Shop\Tests\Logger;
 
 use Stock2Shop\Environment\Env;
 use Stock2Shop\Environment\LoaderArray;
-use Stock2Shop\Logger\ChannelProductsFail;
 use Stock2Shop\Logger\Domain;
 use Stock2Shop\Logger\Custom;
 use Stock2Shop\Share\Utils\Date;
@@ -16,7 +15,6 @@ class CustomTest extends Base
     public function testLog()
     {
         // test writing logs to file
-
         $loader = new LoaderArray([
             'LOG_CHANNEL'      => 'Logger',
             'LOG_FS_DIR'       => sprintf('%s/output/', __DIR__),
@@ -32,12 +30,8 @@ class CustomTest extends Base
             'channel_id'   => 1,
             'client_id'    => 21,
             'attributes'   => [
-                [
-                    'key1' => 'value1'
-                ],
-                [
-                    'key2' => 'value2'
-                ]
+                'key1' => 'value1',
+                'key2' => 'value2'
             ],
             'created'      => Date::getDateString(),
             'ip'           => 'ip',
