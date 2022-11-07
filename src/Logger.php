@@ -18,10 +18,10 @@ class Logger extends MonologLogger
     public function __construct()
     {
         $handlers = [];
-        if (Env::get(EnvKey::LOG_CW_ENABLED) == 'true') {
+        if (Env::isTrue(EnvKey::LOG_CW_ENABLED)) {
             $handlers[] = CloudWatchHandler::get();
         }
-        if (Env::get(EnvKey::LOG_FS_ENABLED) == 'true') {
+        if (Env::isTrue(EnvKey::LOG_FS_ENABLED)) {
             $handlers[] = FileHandler::get();
         }
         if (empty($handlers)) {
