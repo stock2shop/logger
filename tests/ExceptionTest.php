@@ -28,7 +28,7 @@ class ExceptionTest extends Base
         // clean test file
         $this->resetLogs();
 
-        Exception::log(new E(self::MESSAGE), null);
+        Exception::log(new E(self::MESSAGE));
 
         $parts = $this->getLogs();
 
@@ -61,9 +61,6 @@ class ExceptionTest extends Base
         $this->resetLogs();
 
         Exception::log(new E(self::MESSAGE), [
-            'level'        => Domain\Log::LOG_LEVEL_INFO,
-            'message'      => 'message',
-            'origin'       => 'origin',
             'metric'       => 10,
             'remote_addr'  => 'remote_addr',
             'request_path' => 'request_path',
