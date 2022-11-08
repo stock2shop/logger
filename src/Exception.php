@@ -12,12 +12,12 @@ final class Exception
 {
     /**
      * @param Throwable $e
-     * @param Fields|null $params
+     * @param Fields|array $params
      * @return void
      */
-    public static function log(Throwable $e, ?array $params): void
+    public static function log(Throwable $e, array $params = []): void
     {
-        $arr     = array_merge($params ?? [], [
+        $arr     = array_merge($params, [
             'level'     => Domain\Log::LOG_LEVEL_ERROR,
             'message'   => $e->getMessage(),
             'origin'    => Env::get(EnvKey::LOG_CHANNEL),
