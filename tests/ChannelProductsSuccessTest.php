@@ -42,17 +42,24 @@ class ChannelProductsSuccessTest extends Base
         // 4 lines, one is space at end
         $this->assertCount(2, $parts);
         $this->assertEquals('', $parts[1]);
-        for ($i = 0; $i < 1; $i++) {
-            $obj = json_decode($parts[0], true);
-            $this->assertEquals(Domain\Log::LOG_LEVEL_INFO, $obj['level']);
-            $this->assertEquals(ChannelProductsSuccess::MESSAGE, $obj['message']);
-            $this->assertEquals(2, $obj['metric']);
-            $this->assertEquals(1, $obj['client_id']);
-            $this->assertEquals(2, $obj['channel_id']);
-            $this->assertEquals(ChannelProductsSuccess::TAG, $obj['tags'][0]);
-            $this->assertArrayHasKey('trace', $obj);
-            $this->assertArrayHasKey('tags', $obj);
-            $this->assertNotEmpty($obj['created']);
-        }
+        $obj = json_decode($parts[0], true);
+        $this->assertEquals(Domain\Log::LOG_LEVEL_INFO, $obj['level']);
+        $this->assertEquals(ChannelProductsSuccess::MESSAGE, $obj['message']);
+        $this->assertEquals(2, $obj['metric']);
+        $this->assertEquals(1, $obj['client_id']);
+        $this->assertEquals(2, $obj['channel_id']);
+        $this->assertEquals(ChannelProductsSuccess::TAG, $obj['tags'][0]);
+        $this->assertNotEmpty($obj['created']);
+        $this->assertTrue($obj['log_to_es']);
+
+        // missing properties should not be logged
+        $this->assertArrayNotHasKey('attributes', $obj);
+        $this->assertArrayNotHasKey('ip', $obj);
+        $this->assertArrayNotHasKey('method', $obj);
+        $this->assertArrayNotHasKey('remote_addr', $obj);
+        $this->assertArrayNotHasKey('request_path', $obj);
+        $this->assertArrayNotHasKey('source_id', $obj);
+        $this->assertArrayNotHasKey('trace', $obj);
+        $this->assertArrayNotHasKey('user_id', $obj);
     }
 }

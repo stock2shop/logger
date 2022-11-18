@@ -10,6 +10,8 @@ use Stock2Shop\Logger\EnvKey;
 
 class Base extends TestCase
 {
+    protected const LOG_CHANNEL = 'Logger';
+
     public function getLogs(): array
     {
         $dir  = Env::get(EnvKey::LOG_FS_DIR);

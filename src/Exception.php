@@ -22,6 +22,7 @@ final class Exception
             'message'   => $e->getMessage(),
             'origin'    => Env::get(EnvKey::LOG_CHANNEL),
             'trace'     => $e->getTrace(),
+            'log_to_es'  => true,
             'client_id' => 0,
         ]);
         $context = new Domain\Log($arr);

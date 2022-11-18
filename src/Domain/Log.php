@@ -70,23 +70,23 @@ class Log
      */
     public function __construct(array $data)
     {
-        $this->channel_id   = (int)($data['channel_id'] ?? null);
-        $this->client_id    = (int)($data['client_id'] ?? null);
+        $this->channel_id   = isset($data['channel_id']) ? (int)$data['channel_id'] : null;
+        $this->client_id    = isset($data['client_id']) ? (int)$data['client_id'] : null;
         $this->attributes   = $data['attributes'] ?? [];
         $this->created      = Date::getDateString();
-        $this->ip           = (string)($data['ip'] ?? null);
-        $this->log_to_es    = (bool)($data['log_to_es'] ?? null);
-        $this->level        = (string)($data['level'] ?? null);
-        $this->message      = (string)($data['message'] ?? null);
-        $this->method       = (string)($data['method'] ?? null);
-        $this->metric       = (float)($data['metric'] ?? null);
-        $this->origin       = (string)($data['origin'] ?? null);
-        $this->remote_addr  = (string)($data['remote_addr'] ?? null);
-        $this->request_path = (string)($data['request_path'] ?? null);
-        $this->source_id    = (int)($data['source_id'] ?? null);
+        $this->ip           = isset($data['ip']) ? (string)$data['ip'] : null;
+        $this->log_to_es    = isset($data['log_to_es']) && $data['log_to_es'];
+        $this->level        = isset($data['level']) ? (string)$data['level'] : null;
+        $this->message      = isset($data['message']) ? (string)$data['message'] : null;
+        $this->method       = isset($data['method']) ? (string)$data['method'] : null;
+        $this->metric       = isset($data['metric']) ? (float)$data['metric'] : null;
+        $this->origin       = isset($data['origin']) ? (string)$data['origin'] : null;
+        $this->remote_addr  = isset($data['remote_addr']) ? (string)$data['remote_addr'] : null;
+        $this->request_path = isset($data['request_path']) ? (string)$data['request_path'] : null;
+        $this->source_id    = isset($data['source_id']) ? (int)$data['source_id'] : null;
         $this->tags         = $data['tags'] ?? [];
         $this->trace        = $data['trace'] ?? [];
-        $this->user_id      = (int)($data['user_id'] ?? null);
+        $this->user_id      = isset($data['user_id']) ? (int)$data['user_id'] : null;
         if (!in_array($this->level, self::ALLOWED_LOG_LEVEL)) {
             throw new \InvalidArgumentException(sprintf('Invalid log level %s', $this->level));
         }
