@@ -7,7 +7,7 @@ namespace Stock2Shop\Logger\Domain;
 use Stock2Shop\Share\Utils\Date;
 
 /**
- * @psalm-type Level = self::LOG_LEVEL_ERROR|self::LOG_LEVEL_DEBUG|self::LOG_LEVEL_INFO|self::LOG_LEVEL_CRITICAL|self::LOG_LEVEL_WARNING
+ * @psalm-type Level = "error"|"debug"|"info"|"critical"|"warning"
  * @psalm-type Fields = array{
  *     channel_id?: int|null,
  *     client_id?: int|null,
@@ -24,7 +24,7 @@ use Stock2Shop\Share\Utils\Date;
  *     request_path?: string,
  *     source_id?: int,
  *     tags?: array<int, string>,
- *     trace?: array<array-key, mixed>,
+ *     trace?: array<int, string>,
  *     user_id?: int}
  */
 class Log
@@ -43,14 +43,14 @@ class Log
         self::LOG_LEVEL_WARNING
     ];
 
-    /** @var Level */
+    /** @psalm-var Level $level */
     public string $level;
     public string $message;
     public string $origin;
     public ?int $channel_id;
     public ?int $client_id;
     /** @var array<string, mixed> */
-    public array $attributes;
+    public ?array $attributes;
     public string $created;
     public ?string $ip;
     public bool $log_to_es = false;
@@ -61,7 +61,7 @@ class Log
     public ?int $source_id;
     /** @var array<int, string> */
     public array $tags;
-    /** @var array<array-key, mixed> */
+    /** @var array<int, string> */
     public array $trace;
     public ?int $user_id;
 
@@ -70,23 +70,23 @@ class Log
      */
     public function __construct(array $data)
     {
-        $this->channel_id   = (int)($data['channel_id'] ?? null);
-        $this->client_id    = (int)($data['client_id'] ?? null);
+        $this->channel_id   = $data['channel_id'] ?? null;
+        $this->client_id    = $data['client_id']?? null;
         $this->attributes   = $data['attributes'] ?? [];
-        $this->created      = Date::getDateString();
-        $this->ip           = (string)($data['ip'] ?? null);
-        $this->log_to_es    = (bool)($data['log_to_es'] ?? null);
-        $this->level        = (string)($data['level'] ?? null);
-        $this->message      = (string)($data['message'] ?? null);
-        $this->method       = (string)($data['method'] ?? null);
-        $this->metric       = (float)($data['metric'] ?? null);
-        $this->origin       = (string)($data['origin'] ?? null);
-        $this->remote_addr  = (string)($data['remote_addr'] ?? null);
-        $this->request_path = (string)($data['request_path'] ?? null);
-        $this->source_id    = (int)($data['source_id'] ?? null);
+        $this->created      = $data['created'] ?? Date::getDateString();
+        $this->ip           = $data['ip'] ?? null;
+        $this->log_to_es    = $data['log_to_es'] ?? false;
+        $this->level        = $data['level'];
+        $this->message      = $data['message'];
+        $this->method       = $data['method'] ?? null;
+        $this->metric       = $data['metric'] ?? null;
+        $this->origin       = $data['origin'];
+        $this->remote_addr  = $data['remote_addr'] ?? null;
+        $this->request_path = $data['request_path'] ?? null;
+        $this->source_id    = $data['source_id'] ?? null;
         $this->tags         = $data['tags'] ?? [];
         $this->trace        = $data['trace'] ?? [];
-        $this->user_id      = (int)($data['user_id'] ?? null);
+        $this->user_id      = $data['user_id'] ?? null;
         if (!in_array($this->level, self::ALLOWED_LOG_LEVEL)) {
             throw new \InvalidArgumentException(sprintf('Invalid log level %s', $this->level));
         }

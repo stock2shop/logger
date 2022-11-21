@@ -21,7 +21,8 @@ final class Exception
             'level'     => Domain\Log::LOG_LEVEL_ERROR,
             'message'   => $e->getMessage(),
             'origin'    => Env::get(EnvKey::LOG_CHANNEL),
-            'trace'     => $e->getTrace(),
+            'trace'     => explode(PHP_EOL, $e->getTraceAsString()),
+            'log_to_es'  => true,
             'client_id' => 0,
         ]);
         $context = new Domain\Log($arr);

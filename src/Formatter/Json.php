@@ -16,6 +16,14 @@ class Json extends Formatter\JsonFormatter
 
         // Recreate the log from context
         $log = new  Domain\Log($record['context']);
-        return $this->toJson($log->flatten(), true) . ($this->appendNewline ? "\n" : '');
+        $flattened = $log->flatten();
+        foreach ($flattened as $k => $v) {
+            // if item has no value set, or is an empty array.
+            // We should drop the key from the log
+            if (!isset($v) || (is_array($v) && count($v) == 0)) {
+                unset($flattened[$k]);
+            }
+        }
+        return $this->toJson($flattened, true) . ($this->appendNewline ? "\n" : '');
     }
 }

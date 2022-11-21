@@ -10,6 +10,9 @@ use Stock2Shop\Logger\ChannelProductsFail;
 use Stock2Shop\Logger\Domain;
 use Stock2Shop\Share\DTO;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor:
+ */
 class ChannelProductsFailTest extends Base
 {
     public function testLog(): void
@@ -43,17 +46,25 @@ class ChannelProductsFailTest extends Base
         // 4 lines, one is space at end
         $this->assertCount(2, $parts);
         $this->assertEquals('', $parts[1]);
-        for ($i = 0; $i < 1; $i++) {
-            $obj = json_decode($parts[0], true);
-            $this->assertEquals(Domain\Log::LOG_LEVEL_ERROR, $obj['level']);
-            $this->assertEquals(ChannelProductsFail::MESSAGE, $obj['message']);
-            $this->assertEquals(2, $obj['metric']);
-            $this->assertEquals(1, $obj['client_id']);
-            $this->assertEquals(2, $obj['channel_id']);
-            $this->assertEquals(ChannelProductsFail::TAG, $obj['tags'][0]);
-            $this->assertArrayHasKey('trace', $obj);
-            $this->assertArrayHasKey('tags', $obj);
-            $this->assertNotEmpty($obj['created']);
-        }
+
+        $obj = json_decode($parts[0], true);
+        $this->assertEquals(Domain\Log::LOG_LEVEL_ERROR, $obj['level']);
+        $this->assertEquals(ChannelProductsFail::MESSAGE, $obj['message']);
+        $this->assertEquals(2, $obj['metric']);
+        $this->assertEquals(1, $obj['client_id']);
+        $this->assertEquals(2, $obj['channel_id']);
+        $this->assertEquals(ChannelProductsFail::TAG, $obj['tags'][0]);
+        $this->assertNotEmpty($obj['created']);
+        $this->assertTrue($obj['log_to_es']);
+
+        // Missing properties should not be logged
+        $this->assertArrayNotHasKey('attributes', $obj);
+        $this->assertArrayNotHasKey('ip', $obj);
+        $this->assertArrayNotHasKey('method', $obj);
+        $this->assertArrayNotHasKey('remote_addr', $obj);
+        $this->assertArrayNotHasKey('request_path', $obj);
+        $this->assertArrayNotHasKey('source_id', $obj);
+        $this->assertArrayNotHasKey('trace', $obj);
+        $this->assertArrayNotHasKey('user_id', $obj);
     }
 }

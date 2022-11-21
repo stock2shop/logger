@@ -12,6 +12,9 @@ use Stock2Shop\Environment\LoaderArray;
 use Stock2Shop\Logger\EnvKey;
 use Stock2Shop\Logger\Logger;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor:
+ */
 class LoggerTest extends Base
 {
     public function testInvalidHandler(): void

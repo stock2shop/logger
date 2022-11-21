@@ -10,9 +10,17 @@ use Stock2Shop\Logger\Domain;
 use Stock2Shop\Logger\Custom;
 use Stock2Shop\Share\Utils\Date;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor:
+ */
 class CustomTest extends Base
 {
-    public function testLogBasic(): void
+    /**
+     * @dataProvider partialLogDataProvider
+     * @param array<string, mixed> $keysToAdd
+     * @param string[] $missingKeys
+     */
+    public function testPartialLog(array $keysToAdd, array $missingKeys): void
     {
         // test writing logs to file
         $loader = new LoaderArray([
@@ -26,26 +34,116 @@ class CustomTest extends Base
         // clean test file
         $this->resetLogs();
 
-        Custom::log([
-            'level'   => Domain\Log::LOG_LEVEL_INFO,
-            'message' => 'message',
-            'origin'  => 'origin',
-        ]);
+        // create log based off of parameter keysToAdd
+        $logContext = [];
+        foreach ($keysToAdd as $k => $v) {
+            $logContext[$k] = $v;
+        }
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         */
+        Custom::log($logContext);
 
         $parts = $this->getLogs();
 
         // 4 lines, one is space at end
         $this->assertCount(2, $parts);
         $this->assertEquals('', $parts[1]);
-        for ($i = 0; $i < 1; $i++) {
-            $obj = json_decode($parts[0], true);
-            $this->assertEquals(Domain\Log::LOG_LEVEL_INFO, $obj['level']);
-            $this->assertEquals('message', $obj['message']);
-            $this->assertEquals('origin', $obj['origin']);
-            $this->assertArrayHasKey('trace', $obj);
-            $this->assertArrayHasKey('tags', $obj);
-            $this->assertNotEmpty($obj['created']);
+        $obj = json_decode($parts[0], true);
+
+        // Assert that keys provided have been written
+        foreach ($keysToAdd as $key => $value) {
+            $this->assertEquals($value, $obj[$key]);
         }
+
+        // Assert that keys with default values have been written
+        $this->assertEquals($keysToAdd['log_to_es'] ?? false, $obj['log_to_es']);
+        $this->assertNotEmpty($obj['created']);
+
+        // Assert that logger  has not written keys with no values
+        foreach ($missingKeys as $key) {
+            $this->assertArrayNotHasKey($key, $obj);
+        }
+    }
+
+    private function partialLogDataProvider(): array
+    {
+        return [
+            [
+                // Keys to add
+                [
+                    'level'   => Domain\Log::LOG_LEVEL_INFO,
+                    'message' => 'message-asdf',
+                    'origin'  => self::LOG_CHANNEL,
+                ],
+                // Missing Keys
+                [
+                    'channel_id',
+                    'client_id',
+                    'attributes',
+                    'ip',
+                    'method',
+                    'metric',
+                    'remote_addr',
+                    'request_path',
+                    'source_id',
+                    'tags',
+                    'trace',
+                    'user_id',
+                ]
+            ],
+            [
+                // Keys to add
+                [
+                    'level'   => Domain\Log::LOG_LEVEL_INFO,
+                    'message' => 'message-asdf',
+                    'origin'  => self::LOG_CHANNEL,
+                    'log_to_es' => true,
+                ],
+                // Missing Keys
+                [
+                    'channel_id',
+                    'client_id',
+                    'attributes',
+                    'ip',
+                    'method',
+                    'metric',
+                    'remote_addr',
+                    'request_path',
+                    'source_id',
+                    'tags',
+                    'trace',
+                    'user_id',
+                ]
+            ],
+            [
+                // Keys to add
+                [
+                    'level'   => Domain\Log::LOG_LEVEL_INFO,
+                    'message' => 'message-asdf',
+                    'origin'  => self::LOG_CHANNEL,
+                    'channel_id' => 20,
+                    'client_id' => 21,
+                    'tags' => [
+                        'tag-1',
+                        'tag-2',
+                        'tag-3',
+                    ],
+                ],
+                // Missing Keys
+                [
+                    'attributes',
+                    'ip',
+                    'method',
+                    'metric',
+                    'remote_addr',
+                    'request_path',
+                    'source_id',
+                    'trace',
+                    'user_id',
+                ]
+            ],
+        ];
     }
 
     public function testLogComplex(): void
