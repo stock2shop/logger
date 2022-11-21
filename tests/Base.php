@@ -8,6 +8,9 @@ use PHPUnit\Framework\TestCase;
 use Stock2Shop\Environment\Env;
 use Stock2Shop\Logger\EnvKey;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor:
+ */
 class Base extends TestCase
 {
     protected const LOG_CHANNEL = 'Logger';

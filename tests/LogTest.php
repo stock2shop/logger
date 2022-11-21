@@ -6,6 +6,9 @@ namespace Stock2Shop\Tests\Logger;
 
 use Stock2Shop\Logger\Domain;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor:
+ */
 class LogTest extends Base
 {
     /** @dataProvider flattenDataProvider */

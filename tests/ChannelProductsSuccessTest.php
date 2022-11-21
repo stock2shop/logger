@@ -10,6 +10,9 @@ use Stock2Shop\Logger\Domain;
 use Stock2Shop\Logger\ChannelProductsSuccess;
 use Stock2Shop\Share\DTO;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor:
+ */
 class ChannelProductsSuccessTest extends Base
 {
     public function testLog(): void

@@ -10,6 +10,9 @@ use Stock2Shop\Environment\LoaderArray;
 use Stock2Shop\Logger\Domain;
 use Stock2Shop\Logger\Exception;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor:
+ */
 class ExceptionTest extends Base
 {
     public const MESSAGE = 'test log';

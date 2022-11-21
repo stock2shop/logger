@@ -10,6 +10,9 @@ use Stock2Shop\Logger\Domain;
 use Stock2Shop\Logger\Custom;
 use Stock2Shop\Share\Utils\Date;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor:
+ */
 class CustomTest extends Base
 {
     /**
@@ -36,6 +39,9 @@ class CustomTest extends Base
         foreach ($keysToAdd as $k => $v) {
             $logContext[$k] = $v;
         }
+        /**
+         * @psalm-suppress ArgumentTypeCoercion
+         */
         Custom::log($logContext);
 
         $parts = $this->getLogs();
